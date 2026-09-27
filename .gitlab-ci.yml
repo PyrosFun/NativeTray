@@ -1,4 +1,4 @@
-image: registry.fedoraproject.org/fedora:44
+image: registry.fedoraproject.org/fedora:46
 
 stages:
   - build
