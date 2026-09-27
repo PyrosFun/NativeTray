@@ -33,13 +33,19 @@ export default class NativeTrayPreferences extends ExtensionPreferences {
             model: Gtk.StringList.new(choices),
         });
         actionRow.selected = Math.max(0, values.indexOf(settings.get_string('left-click-action')));
-        actionRow.connect('notify::selected', () =>
-            settings.set_string('left-click-action', values[actionRow.selected]));
-        settings.connect_object('changed::left-click-action', () => {
+        actionRow.connect('notify::selected', () => {
+            if (actionRow.selected < values.length)
+                settings.set_string('left-click-action', values[actionRow.selected]);
+        });
+        const settingsChangedId = settings.connect('changed::left-click-action', () => {
             const selected = values.indexOf(settings.get_string('left-click-action'));
             if (selected >= 0 && actionRow.selected !== selected)
                 actionRow.selected = selected;
-        }, window);
+        });
+        window.connect('close-request', () => {
+            settings.disconnect(settingsChangedId);
+            return false;
+        });
         group.add(actionRow);
 
         window._settings = settings;

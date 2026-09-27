@@ -2,15 +2,50 @@ image: registry.fedoraproject.org/fedora:44
 
 stages:
   - build
+  - release
 
-build:
+build-extension:
   stage: build
   before_script:
-    - dnf5 install -y nodejs make glib2 zip unzip
+    - dnf5 install -y glib2 zip unzip git
   script:
-    - make pack
+    - bash scripts/package.sh
   artifacts:
-    name: "NativeTray-$CI_COMMIT_REF_SLUG"
     paths:
-      - nativetray@pyrosfun.com.shell-extension.zip
+      - dist/nativetray@pyrosfun.com.shell-extension.zip
     expire_in: 30 days
+
+publish-release:
+  stage: release
+  image: registry.gitlab.com/gitlab-org/cli:latest
+  needs:
+    - job: build-extension
+      artifacts: true
+  rules:
+    - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+$/'
+  variables:
+    GLAB_ENABLE_CI_AUTOLOGIN: "true"
+  script:
+    - |
+      VERSION="${CI_COMMIT_TAG#v}"
+
+      awk -v version="$VERSION" '
+        /^## / {
+          if (found) exit
+          if ($0 == "## " version) found=1
+        }
+        found { print }
+      ' CHANGELOG.md > RELEASE_NOTES.md
+
+      if [ ! -s RELEASE_NOTES.md ]; then
+        echo "ERROR: No changelog section found for $VERSION" >&2
+        echo "Expected heading: ## $VERSION" >&2
+        exit 1
+      fi
+
+      glab release create "$CI_COMMIT_TAG" \
+        --name "NativeTray $CI_COMMIT_TAG" \
+        --notes-file RELEASE_NOTES.md \
+        --ref "$CI_COMMIT_SHA" \
+        --use-package-registry \
+        "dist/nativetray@pyrosfun.com.shell-extension.zip#Download NativeTray $CI_COMMIT_TAG (.zip)#package"

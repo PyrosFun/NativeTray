@@ -1,0 +1,12 @@
+# CI build output
+/dist/
+*.shell-extension.zip
+schemas/gschemas.compiled
+
+# Editor and operating system files
+.DS_Store
+*~
+*.swp
+*.swo
+.idea/
+.vscode/

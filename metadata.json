@@ -3,6 +3,6 @@
   "name": "NativeTray",
   "description": "Native GNOME Background Apps with StatusNotifier tray actions",
   "shell-version": ["50"],
-  "version": 5,
+  "version": 6,
   "settings-schema": "org.gnome.shell.extensions.nativetray"
 }

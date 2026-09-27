@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.1
+
+- Fix the Preferences window's left-click setting synchronization.
+- Build and publish tagged GitLab releases with notes from the matching changelog section.
+- License the project under MIT-0.
+
 ## 0.1.0 — release candidate
 
 - Integrate StatusNotifierItem entries into GNOME Shell 50 Background Apps.

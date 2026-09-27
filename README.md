@@ -1,47 +1,82 @@
 # NativeTray
 
-NativeTray integrates StatusNotifierItem apps into GNOME Shell 50's native Background Apps menu. Left-click prefers an app-provided Show/Open/Restore action, then falls back to SNI activation or GNOME's native app activation. Right-click or the menu button opens the app's tray menu.
+**Bring StatusNotifier tray applications into GNOME Shell’s Background Apps panel.**
 
-Menus use GNOME's menu widgets and support actions, nested items, separators, disabled items, and check/radio state. The X prefers an app-provided Quit/Exit/Close action, including on matched native rows. Without one, native rows retain GNOME's close behavior; SNI-only rows show a disabled X. NativeTray does not kill SNI-only processes as a fallback.
+NativeTray turns GNOME’s background-app list into a practical system tray while keeping the native GNOME look and feel. It integrates applications that publish the StatusNotifierItem (SNI) protocol, reuses matching GNOME app entries, and exposes app-provided tray actions and menus.
 
-## Test on GNOME Shell 50
+## Features
 
-Disable Status Tray before testing: only one extension can own the SNI watcher bus name. Build and install the release archive from this directory:
+- Displays compatible tray applications in Quick Settings → **Background Apps**
+- Merges matching tray entries with GNOME’s native app entries
+- Uses GNOME menu styling for app-provided tray menus, including nested items and check states
+- Maps left-click to an app’s available show/open action, with activation fallback
+- Uses an app’s Quit/Exit/Close action for the **×** button when available
+- Offers preferences for tray visibility, duplicate merging, and click behavior
+
+NativeTray does not terminate an application when it has no published close action. Tray menu actions and matching depend on information the application exposes.
+
+## Requirements
+
+- GNOME Shell 50
+- A running GNOME session with StatusNotifierItem applications
+- NativeTray must be the active StatusNotifier watcher. Disable other tray extensions, such as Status Tray, while using it.
+
+## Install
+
+1. Open this project’s **Deploy → Releases** page and download the ZIP attached to the latest release.
+2. Install the ZIP from a terminal (adjust the path if your browser saved it elsewhere):
+
+   ```fish
+   gnome-extensions install --force ~/Downloads/nativetray@pyrosfun.com.shell-extension.zip
+   ```
+
+   GNOME’s installer extracts it into your per-user extensions directory; you do not need to manually copy files.
+3. On Wayland, log out and back in after installation.
+4. Enable NativeTray:
+
+   ```fish
+   gnome-extensions enable nativetray@pyrosfun.com
+   ```
+
+5. Open Quick Settings and select **Background Apps**. Start or restart tray applications if they were already running while another watcher owned the SNI bus name.
+
+## Use and preferences
+
+Open **Quick Settings → Background Apps** to see active entries. Left-click activates the app or uses a matching show/open action. Use the arrow to open an app’s GNOME-styled tray menu; right-click also requests the app’s context menu. The **×** button invokes a published close action when one is available, otherwise GNOME’s native close behavior for matched background apps.
+
+Open NativeTray’s **Settings** from Extension Manager to change tray visibility, duplicate merging, middle-click behavior, or the left-click action.
+
+## Releases
+
+NativeTray follows the same tag-based release flow as PyroTile:
+
+1. Add a `## X.Y.Z` section to `CHANGELOG.md` with the release notes.
+2. Commit and push the changes.
+3. Create and push a matching version tag. For example:
+
+   ```fish
+   git tag -a v0.1.2 -m "NativeTray 0.1.2"
+   git push origin v0.1.2
+   ```
+
+GitLab CI builds the extension ZIP. For a semantic version tag such as `v0.1.2`, the release job takes the matching `0.1.2` section from `CHANGELOG.md`, publishes the GitLab Release, and attaches the ZIP.
+
+## Development
+
+Run local syntax, schema, metadata, and unit-test checks with:
 
 ```fish
-gnome-extensions disable status-tray@keithvassallo.com
-gnome-extensions disable nativetray@pyrosfun.com
-make pack
-gnome-extensions install --force nativetray@pyrosfun.com.shell-extension.zip
+make validate
 ```
 
-On Wayland, log out and back in after installing the update. Then enable NativeTray:
+GitLab CI creates packages. Its build artifact is available for 30 days; tagged releases are available from **Deploy → Releases**.
+
+For troubleshooting, capture GNOME Shell logs with:
 
 ```fish
-gnome-extensions enable nativetray@pyrosfun.com
+journalctl --user -b -o short-iso --no-pager -g 'NativeTray|nativetray|JS ERROR|StatusNotifier' -n 150
 ```
 
-Start or restart an SNI app such as Steam or EShot. Open Quick Settings → Background Apps. Confirm the expanded arrow remains centered and the submenu has rounded top corners. Test left-click activation, right-click and menu-button opening, middle-click secondary activation, nested items, menu icons, and checkboxes. For an app with a Quit/Exit/Close menu action, check that X exits cleanly; for a matched native row such as Seafile, confirm the X and left-click fallbacks still work. Seafile and Seafile Client should appear as one row when their identity can be matched.
+## License
 
-Use the Extensions app's NativeTray preferences to test hiding tray entries, disabling duplicate merging, and making left-click open the tray menu. Restore the defaults before reporting other behavior.
-
-Then run:
-
-```fish
-gnome-extensions disable nativetray@pyrosfun.com
-gnome-extensions enable nativetray@pyrosfun.com
-```
-
-Confirm SNI rows disappear when disabled and appear exactly once when re-enabled. Native rows should remain functional throughout. If an app does not re-register when the watcher changes, restart that app.
-
-To inspect logs:
-
-```fish
-journalctl --user -b -o cat --no-pager | rg 'NativeTray|nativetray'
-```
-
-`make pack` needs `make`, `glib-compile-schemas`, `zip`, and `unzip`; it does not require Node. Contributors with Node installed can run JavaScript syntax, schema, metadata, and logic checks with `make validate`.
-
-Known limits: action detection uses conservative English menu labels and cannot infer a tray action from apps that do not publish one. Apps without an SNI menu cannot expose tray actions through the native GNOME monitor. NativeTray cannot recover already-registered items from a competing watcher, so restart affected apps after changing watcher ownership. Some applications expose incomplete SNI metadata or icons, so compatibility still needs live testing. This release candidate targets GNOME Shell 50 only.
-
-The GNOME Shell extension code depends on GNOME's private Background Apps implementation, which may change between Shell releases. `make pack` produces the self-contained installation archive. CI publishes that ZIP as a build artifact. This project is licensed GPL-3.0-or-later; see `LICENSE`.
+NativeTray is available under the MIT No Attribution license (MIT-0). You can use, modify, redistribute, and sell it without attribution requirements; see [LICENSE](LICENSE). MIT-0 is listed as an OSI-approved license in the [SPDX License List](https://spdx.org/licenses/MIT-0.html).
