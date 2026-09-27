@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.nativetray" path="/org/gnome/shell/extensions/nativetray/">
+    <key name="show-sni-items" type="b">
+      <default>true</default>
+      <summary>Show StatusNotifier items</summary>
+    </key>
+    <key name="merge-duplicates" type="b">
+      <default>true</default>
+      <summary>Merge items with matching GNOME Background Apps</summary>
+    </key>
+    <key name="left-click-action" type="s">
+      <default>'activate'</default>
+      <summary>Left-click action: activate or menu</summary>
+    </key>
+    <key name="middle-click-activates" type="b">
+      <default>true</default>
+      <summary>Use SNI secondary activation on middle click</summary>
+    </key>
+  </schema>
+</schemalist>

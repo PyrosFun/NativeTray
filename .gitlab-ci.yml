@@ -1,0 +1,16 @@
+image: registry.fedoraproject.org/fedora:44
+
+stages:
+  - build
+
+build:
+  stage: build
+  before_script:
+    - dnf5 install -y nodejs make glib2 zip unzip
+  script:
+    - make pack
+  artifacts:
+    name: "NativeTray-$CI_COMMIT_REF_SLUG"
+    paths:
+      - nativetray@pyrosfun.com.shell-extension.zip
+    expire_in: 30 days
