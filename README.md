@@ -20,10 +20,10 @@ What NativeTray can do depends on the actions each application exposes. It does 
 
 ## Install
 
-Download `nativetray@pyrosfun.com.shell-extension.zip` from the latest project release, then install it from a terminal. Change the path if the ZIP was saved somewhere else:
+Download `nativetray-shell-extension.zip` from the latest project release, then install it from a terminal. Change the path if the ZIP was saved somewhere else:
 
 ```fish
-gnome-extensions install --force ~/Downloads/nativetray@pyrosfun.com.shell-extension.zip
+gnome-extensions install --force ~/Downloads/nativetray-shell-extension.zip
 gnome-extensions enable nativetray@pyrosfun.com
 ```
 
@@ -35,7 +35,7 @@ Download the ZIP attached to the latest release and install it over the existing
 
 ```fish
 gnome-extensions disable nativetray@pyrosfun.com
-gnome-extensions install --force ~/Downloads/nativetray@pyrosfun.com.shell-extension.zip
+gnome-extensions install --force ~/Downloads/nativetray-shell-extension.zip
 gnome-extensions enable nativetray@pyrosfun.com
 ```
 

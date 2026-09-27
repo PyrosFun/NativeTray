@@ -12,7 +12,7 @@ build-extension:
     - bash scripts/package.sh
   artifacts:
     paths:
-      - dist/nativetray@pyrosfun.com.shell-extension.zip
+      - dist/nativetray-shell-extension.zip
     expire_in: 30 days
 
 publish-release:
@@ -48,4 +48,4 @@ publish-release:
         --notes-file RELEASE_NOTES.md \
         --ref "$CI_COMMIT_SHA" \
         --use-package-registry \
-        "dist/nativetray@pyrosfun.com.shell-extension.zip#Download NativeTray $CI_COMMIT_TAG (.zip)#package"
+        "dist/nativetray-shell-extension.zip#Download NativeTray $CI_COMMIT_TAG (.zip)#package"

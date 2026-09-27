@@ -2,8 +2,7 @@
 set -euo pipefail
 
 project_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
-uuid="nativetray@pyrosfun.com"
-archive="$project_dir/dist/$uuid.shell-extension.zip"
+archive="$project_dir/dist/nativetray-shell-extension.zip"
 stage_dir="$(mktemp -d)"
 trap 'rm -rf "$stage_dir"' EXIT
 

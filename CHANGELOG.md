@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.2
+
+- Fix release asset publishing by using a GitLab-compatible ZIP filename.
+
 ## 0.1.1
 
 - Fix the Preferences window's left-click setting synchronization.
