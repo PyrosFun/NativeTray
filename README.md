@@ -1,6 +1,10 @@
 > [!NOTE]
 > This project was mostly written with AI. It is intended for personal use but other might find it helpful.
 
+> [!important]
+> To create issues / suggestions please use the unified issue tracker:
+> **https://github.com/PyrosFun/IssueTracker**
+
 # NativeTray
 
 NativeTray brings StatusNotifier tray applications into GNOME Shell's **Background Apps** panel. It keeps GNOME's native presentation while adding access to application-provided tray menus and actions.
